@@ -1,0 +1,9 @@
+namespace MinimalApi.Models;
+
+public record PaymentSummary()
+{
+    public SummaryInfo Default { get; set; }
+    public SummaryInfo Fallback { get; set; }
+};
+
+public record SummaryInfo(int totalRequests, decimal totalAmount);
