@@ -28,6 +28,7 @@ app.MapGet("/payments-summary", async ([FromQuery] DateTime from, [FromQuery] Da
 
 app.Run();
 
+[JsonSerializable(typeof(PaymentSummary))]
 [JsonSerializable(typeof(PaymentRequest))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
