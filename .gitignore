@@ -52,3 +52,12 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+
+# Visual Studio Code
+.vscode/    # Local History for Visual Studio Code
+.history/   # Local History for Visual Studio Code
+# Rider
+.idea/     # JetBrains Rider project files
+# Visual Studio
+.vs/       # Visual Studio specific files
