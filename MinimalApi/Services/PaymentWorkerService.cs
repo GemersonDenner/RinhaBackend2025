@@ -42,7 +42,7 @@ public class PaymentWorkerService: BackgroundService
                 }
                 nextItem = memoryItemsService.GetNextItem();
             }
-            await Task.Delay(500, stoppingToken);
+            await Task.Delay(2, stoppingToken);
         }
     }
 }
