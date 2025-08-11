@@ -8,4 +8,8 @@
     <PublishAot>true</PublishAot>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="EnyimMemcachedCore" Version="3.4.1" />
+  </ItemGroup>
+
 </Project>

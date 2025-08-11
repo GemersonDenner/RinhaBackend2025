@@ -4,8 +4,24 @@ using MinimalApi.Models;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
-builder.Services.AddHostedService<MinimalApi.Services.PaymentProcessService>();
+builder.Services.AddHttpClient("clientApi", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(10);
+})
+.ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+{
+    PooledConnectionLifetime = TimeSpan.FromMinutes(10),
+});
 
+builder.Services.AddHostedService<MinimalApi.Services.PaymentWorkerService>();
+builder.Services.AddSingleton<MinimalApi.Services.IMemoryItemsService, MinimalApi.Services.MemoryItemsService>();
+builder.Services.AddSingleton<MinimalApi.Services.IPaymentProcessService, MinimalApi.Services.PaymentProcessService>();
+builder.Services.AddSingleton<MinimalApi.Services.ICacheItemsService, MinimalApi.Services.CacheItemsService>();
+builder.Services.AddSingleton<MinimalApi.Services.IApiRequestsService, MinimalApi.Services.ApiRequestsService>();
+builder.Services.AddEnyimMemcached(options =>
+{
+    options.AddServer("localhost", 11211);
+});
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
@@ -13,21 +29,31 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 var app = builder.Build();
 
-app.MapPost("/payments", async (HttpContext context, [FromBody] PaymentRequest paymentRequest) =>
+app.MapPost("/payments", async (HttpContext context, 
+                                [FromBody] PaymentRequest paymentRequest, 
+                                [FromServices] MinimalApi.Services.IMemoryItemsService  memoryItemsService,
+                                [FromServices] MinimalApi.Services.ICacheItemsService cacheItemsService
+                                ) =>
 {
-    await Task.Delay(10);
+    await cacheItemsService.AddItemAsync(paymentRequest);
+    memoryItemsService.AddItem(paymentRequest.correlationId);
     return Results.Ok();
 });
 
-app.MapGet("/payments-summary", async ([FromQuery] DateTime from, [FromQuery] DateTime to) =>
+app.MapGet("/payments-summary", async (
+                                [FromQuery] DateTime from, 
+                                [FromQuery] DateTime to,
+                                [FromServices] MinimalApi.Services.IPaymentProcessService paymentProcessService
+                                ) =>
 {
-    await Task.Delay(10);
-    return Results.Ok();
+    var summary = await paymentProcessService.GetPaymentSummaryAsync(from, to);
+    return Results.Ok(summary);
 });
 
-
+app.UseEnyimMemcached();
 app.Run();
 
+[JsonSerializable(typeof(PaymentProcessed))]
 [JsonSerializable(typeof(PaymentSummary))]
 [JsonSerializable(typeof(PaymentRequest))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext

@@ -1,0 +1,48 @@
+###Test Locahost API
+Post http://localhost:5106/payments
+Content-Type: application/json
+
+{
+  "correlationId": "{{$guid}}",
+  "amount": 150.75
+}
+###Test Locahost API
+Post http://localhost:5106/payments
+Content-Type: application/json
+
+{
+  "correlationId": "{{$guid}}",
+  "amount": 150.75
+}
+###Test Locahost API
+Post http://localhost:5106/payments
+Content-Type: application/json
+
+{
+  "correlationId": "{{$guid}}",
+  "amount": 150.75
+}
+###Test Locahost API
+Post http://localhost:5106/payments
+Content-Type: application/json
+
+{
+  "correlationId": "{{$guid}}",
+  "amount": 150.75
+}
+###Test Locahost API
+Post http://localhost:5106/payments
+Content-Type: application/json
+
+{
+  "correlationId": "{{$guid}}",
+  "amount": 150.75
+}
+###Test Locahost API
+Post http://localhost:5106/payments
+Content-Type: application/json
+
+{
+  "correlationId": "{{$guid}}",
+  "amount": 150.75
+}
