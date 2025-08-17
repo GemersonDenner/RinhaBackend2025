@@ -1,3 +1,3 @@
 namespace MinimalApi.Models;
 
-public record PaymentRequest(string correlationId, decimal amount);
+public record PaymentRequest(Guid correlationId, decimal amount);

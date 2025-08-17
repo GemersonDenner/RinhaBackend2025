@@ -19,16 +19,16 @@ public class CacheItemsService : ICacheItemsService
     }
     public async Task AddItemAsync(PaymentRequest request)
     {
-        await this.memcachedClient.AddAsync(request.correlationId, request, cacheTimeSeconds);
+        await this.memcachedClient.SetAsync(request.correlationId.ToString(), request, cacheTimeSeconds);
     }
 
-    public async Task<PaymentRequest> GetItemAsync(string key)
+    public async Task<PaymentRequest> GetItemAsync(Guid key)
     {
-        var value = await this.memcachedClient.GetValueAsync<PaymentRequest>(key);
-        //if(value == null)
-        //{
-        //    this.memcachedClient.RemoveAsync(key);
-        //}
+        var value = await this.memcachedClient.GetValueAsync<PaymentRequest>(key.ToString());
+        if(value != null)
+        {
+            this.memcachedClient.RemoveAsync(key.ToString());
+        }
         return value;
     }
     
@@ -41,9 +41,9 @@ public class CacheItemsService : ICacheItemsService
     public async Task AddUpdateSummaryAsync(decimal totalAmount, ProcessedByEnum processedBy)
     {
         var summaryItemsKey = processedBy == ProcessedByEnum.Default ? summaryItemsDefaultKey : summaryItemsFallbackKey;
-        var summary = await this.memcachedClient.GetValueAsync<SummaryInfo>(summaryItemsKey) ?? new SummaryInfo(0,0);
-        summary.totalAmount += totalAmount;
-        summary.totalRequests++;
+        var summary = await this.memcachedClient.GetValueAsync<SummaryInfo>(summaryItemsKey) ?? new SummaryInfo();
+        summary.TotalAmount += totalAmount;
+        summary.TotalRequests++;
         await this.memcachedClient.ReplaceAsync(summaryItemsKey, summary, cacheTimeSeconds);
     }
     
@@ -56,6 +56,6 @@ public class CacheItemsService : ICacheItemsService
     public async Task<SummaryInfo> GetSummaryAsync(ProcessedByEnum processedBy)
     {
         var summaryItemsKey = processedBy == ProcessedByEnum.Default ? summaryItemsDefaultKey : summaryItemsFallbackKey;
-        return await this.memcachedClient.GetValueAsync<SummaryInfo>(summaryItemsKey) ?? new SummaryInfo(0,0);
+        return await this.memcachedClient.GetValueAsync<SummaryInfo>(summaryItemsKey) ?? new SummaryInfo();
     }
 }

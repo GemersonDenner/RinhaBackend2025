@@ -8,14 +8,14 @@ public record PaymentSummary()
 
 public record SummaryInfo
 {
-    public int totalRequests { get; set; }
-    public decimal totalAmount { get; set; }
+    public int TotalRequests { get; set; }
+    public decimal TotalAmount { get; set; }
 
     public SummaryInfo() : this(0, 0) { }
 
     public SummaryInfo(int totalRequests, decimal totalAmount)
     {
-        this.totalRequests = totalRequests;
-        this.totalAmount = totalAmount;
+        this.TotalRequests = totalRequests;
+        this.TotalAmount = totalAmount;
     }
 }

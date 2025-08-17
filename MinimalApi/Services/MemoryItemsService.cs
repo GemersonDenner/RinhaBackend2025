@@ -4,13 +4,13 @@ namespace MinimalApi.Services;
 
 public class MemoryItemsService : IMemoryItemsService
 {
-    private readonly ConcurrentQueue<string> _items = new();
-    public void AddItem(string key)
+    private readonly ConcurrentQueue<Guid> _items = new();
+    public void AddItem(Guid key)
     {
         _items.Enqueue(key);
     }
 
-    public string? GetNextItem()
+    public Guid? GetNextItem()
     {
         return _items.TryDequeue(out var item) ? item : null;
     }

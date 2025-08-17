@@ -28,7 +28,7 @@ public class PaymentWorkerService: BackgroundService
             var nextItem = memoryItemsService.GetNextItem();
             while (nextItem != null)
             {
-                var cachedItem = await cacheItemsService.GetItemAsync(nextItem);
+                var cachedItem = await cacheItemsService.GetItemAsync(nextItem.Value);
                 if (cachedItem != null)
                 {
                     Console.WriteLine($"Found cached item for correlationId: {cachedItem.correlationId}");
@@ -36,7 +36,7 @@ public class PaymentWorkerService: BackgroundService
                 
                     Console.WriteLine($"Processing item: {nextItem}");
                     // Here you would call the payment processing service
-                    var dateProcess = await paymentProcessService.ProcessPaymentAsync(new PaymentRequest(nextItem, 100.00m )); // Example amount
+                    var dateProcess = await paymentProcessService.ProcessPaymentAsync(new PaymentRequest(nextItem.Value, 100.00m )); // Example amount
                     var processedItem = new PaymentProcessed() { amount = cachedItem.amount, correlationId = cachedItem .correlationId, processedAt = dateProcess }; // Example amount
                     await cacheItemsService.AddUpdateProcessedItemAsync(processedItem, ProcessedByEnum.Default);
                 }
