@@ -27,8 +27,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
+app.MapHealthChecks("/health");
 app.MapPost("/payments", async (HttpContext context, 
                                 [FromBody] PaymentRequest paymentRequest, 
                                 [FromServices] MinimalApi.Services.IMemoryItemsService  memoryItemsService,
@@ -41,7 +44,7 @@ app.MapPost("/payments", async (HttpContext context,
 });
 
 app.MapGet("/payments-summary", async (
-                                [FromQuery] DateTime from, 
+                                [FromQuery] DateTime from,
                                 [FromQuery] DateTime to,
                                 [FromServices] MinimalApi.Services.IPaymentProcessService paymentProcessService
                                 ) =>
@@ -49,7 +52,6 @@ app.MapGet("/payments-summary", async (
     var summary = await paymentProcessService.GetPaymentSummaryAsync(from, to);
     return Results.Ok(summary);
 });
-
 app.UseEnyimMemcached();
 app.Run();
 

@@ -7,7 +7,7 @@ Content-Type: application/json
   "amount": 150.75
 }
 ###Test Locahost API
-Post http://localhost:5106/payments
+Post http://localhost:9999/payments
 Content-Type: application/json
 
 {
@@ -46,3 +46,6 @@ Content-Type: application/json
   "correlationId": "{{$guid}}",
   "amount": 150.75
 }
+
+###Test Locahost API
+GET http://localhost:9999/health
