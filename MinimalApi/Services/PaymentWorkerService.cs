@@ -40,9 +40,9 @@ public class PaymentWorkerService: BackgroundService
                     {
                         Console.WriteLine($"Processing item: {nextItem}");
                         // Here you would call the payment processing service
-                        var dateProcess = await paymentProcessService.ProcessPaymentAsync(new PaymentRequest(nextItem.Value, 100.00m)); // Example amount
+                        var (dateProcess, processedByEnum) = await paymentProcessService.ProcessPaymentAsync(new PaymentRequest(nextItem.Value, 100.00m)); // Example amount
                         var processedItem = new PaymentProcessed() { amount = cachedItem.amount, correlationId = cachedItem.correlationId, processedAt = dateProcess }; // Example amount
-                        await cacheItemsService.AddUpdateProcessedItemAsync(processedItem, ProcessedByEnum.Default);
+                        await cacheItemsService.AddUpdateProcessedItemAsync(processedItem, processedByEnum);
                     }
                     nextItem = memoryItemsService.GetNextItem();
                 });

@@ -12,8 +12,9 @@ public class PaymentProcessService : IPaymentProcessService
         this.cacheItemsService = cacheItemsService;
         this.apiRequestsService = apiRequestsService;
     }
-    public async Task<DateTime> ProcessPaymentAsync(PaymentRequest paymentRequest)
+    public async Task<(DateTime, ProcessedByEnum)> ProcessPaymentAsync(PaymentRequest paymentRequest)
     {
+        ProcessedByEnum processedByEnum = ProcessedByEnum.Default;
         var processDate = DateTime.UtcNow;
         var successCallApi = await apiRequestsService.CallDefaultApi(new PaymentProcessed
         {
@@ -32,13 +33,13 @@ public class PaymentProcessService : IPaymentProcessService
                 correlationId = paymentRequest.correlationId,
                 processedAt = processDate
             });
-
+            processedByEnum = ProcessedByEnum.Fallback;
             Console.WriteLine($"Fallback API call success: {successCallApiFallback}");
         }
 
         Console.WriteLine($"Processing payment for correlationId: {paymentRequest.correlationId}, amount: {paymentRequest.amount}");
         //await Task.Delay(500); // Simulate async work
-        return processDate;
+        return (processDate, processedByEnum);
         
     }
 
