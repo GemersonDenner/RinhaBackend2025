@@ -47,8 +47,8 @@ app.MapPost("/payments", async (HttpContext context,
 });
 
 app.MapGet("/payments-summary", async (
-                                [FromQuery] DateTime from,
-                                [FromQuery] DateTime to,
+                                [FromQuery] DateTimeOffset from,
+                                [FromQuery] DateTimeOffset to,
                                 [FromServices] MinimalApi.Services.IPaymentProcessService paymentProcessService
                                 ) =>
 {

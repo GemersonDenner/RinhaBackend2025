@@ -43,7 +43,7 @@ public class PaymentProcessService : IPaymentProcessService
     }
 
 
-    public async Task<PaymentSummary> GetPaymentSummaryAsync(DateTime from, DateTime to)
+    public async Task<PaymentSummary> GetPaymentSummaryAsync(DateTimeOffset from, DateTimeOffset to)
     {
         var defaultSummary = await cacheItemsService.GetProcessedItemsAsync(ProcessedByEnum.Default);
         var fallbackSummary = await cacheItemsService.GetProcessedItemsAsync(ProcessedByEnum.Fallback);
