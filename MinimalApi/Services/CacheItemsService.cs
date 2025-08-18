@@ -5,7 +5,7 @@ namespace MinimalApi.Services;
 
 public class CacheItemsService : ICacheItemsService
 {
-    private const int cacheTimeSeconds = 3600;
+    private const int cacheTimeSeconds = 5000;
     private const string processedItemsDefaultKey = "Default";
     private const string processedItemsFallbackKey = "Fallback";
     private const string summaryItemsDefaultKey = "SummaryDefault";
