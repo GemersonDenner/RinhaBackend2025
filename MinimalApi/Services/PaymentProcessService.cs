@@ -6,17 +6,35 @@ namespace MinimalApi.Services;
 public class PaymentProcessService : IPaymentProcessService
 {
     private readonly ICacheItemsService cacheItemsService;
-    public PaymentProcessService(ICacheItemsService cacheItemsService)
+    private readonly IApiRequestsService apiRequestsService;
+    public PaymentProcessService(ICacheItemsService cacheItemsService, IApiRequestsService apiRequestsService)
     {
         this.cacheItemsService = cacheItemsService;
+        this.apiRequestsService = apiRequestsService;
     }
     public async Task<DateTime> ProcessPaymentAsync(PaymentRequest paymentRequest)
     {
         var processDate = DateTime.UtcNow;
-        // Simulate payment processing logic}
+        var successCallApi = await apiRequestsService.CallDefaultApi(new PaymentProcessed
+        {
+            amount = paymentRequest.amount,
+            correlationId = paymentRequest.correlationId,
+            processedAt = processDate
+        });
+        if (!successCallApi)
+        {
+            await apiRequestsService.CallFallbackApi(new PaymentProcessed
+            {
+                amount = paymentRequest.amount,
+                correlationId = paymentRequest.correlationId,
+                processedAt = processDate
+            });
+        }
+
         Console.WriteLine($"Processing payment for correlationId: {paymentRequest.correlationId}, amount: {paymentRequest.amount}");
         //await Task.Delay(500); // Simulate async work
         return processDate;
+        
     }
 
 
