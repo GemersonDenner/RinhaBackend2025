@@ -36,7 +36,7 @@ public class CacheItemsService : ICacheItemsService
     {
         var processedItemsKey = processedBy == ProcessedByEnum.Default ? processedItemsDefaultKey : processedItemsFallbackKey;
         var array = await this.memcachedClient.GetValueAsync<List<PaymentProcessed>>(processedItemsKey) ?? new List<PaymentProcessed>();
-        await this.memcachedClient.ReplaceAsync(processedItemsKey, array.Append(processedItem), cacheTimeSeconds);
+        await this.memcachedClient.SetAsync(processedItemsKey, array.Append(processedItem), cacheTimeSeconds);
     }
     public async Task AddUpdateSummaryAsync(decimal totalAmount, ProcessedByEnum processedBy)
     {
@@ -45,7 +45,7 @@ public class CacheItemsService : ICacheItemsService
         summary.TotalAmount += totalAmount;
         summary.TotalRequests++;
         Console.WriteLine($"Adding/Updating summary for {processedBy} with total amount: {summary.TotalAmount}, total requests: {summary.TotalRequests}");
-        await this.memcachedClient.ReplaceAsync(summaryItemsKey, summary, cacheTimeSeconds);
+        await this.memcachedClient.SetAsync(summaryItemsKey, summary, cacheTimeSeconds);
     }
     
     public async Task<List<PaymentProcessed>> GetProcessedItemsAsync(ProcessedByEnum processedBy)

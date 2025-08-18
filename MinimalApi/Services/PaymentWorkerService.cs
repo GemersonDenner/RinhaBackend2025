@@ -43,7 +43,7 @@ public class PaymentWorkerService: BackgroundService
                         var (dateProcess, processedByEnum) = await paymentProcessService.ProcessPaymentAsync(new PaymentRequest(nextItem.Value, 100.00m)); // Example amount
                         var processedItem = new PaymentProcessed() { amount = cachedItem.amount, correlationId = cachedItem.correlationId, processedAt = dateProcess }; // Example amount
                         await cacheItemsService.AddUpdateProcessedItemAsync(processedItem, processedByEnum);
-                        await cacheItemsService.AddUpdateSummaryAsync(processedItem.amount, processedByEnum);
+                        //await cacheItemsService.AddUpdateSummaryAsync(processedItem.amount, processedByEnum);
                     }
                     nextItem = memoryItemsService.GetNextItem();
                 });
