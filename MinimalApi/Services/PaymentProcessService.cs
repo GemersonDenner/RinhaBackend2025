@@ -52,6 +52,9 @@ public class PaymentProcessService : IPaymentProcessService
         var defaultSummaryFiltered = defaultSummary.Where(x => x.processedAt >= from && x.processedAt <= to);
         var fallbackSummaryFiltered = fallbackSummary.Where(x => x.processedAt >= from && x.processedAt <= to);
 
+        Console.WriteLine($"Default Summary Count: {defaultSummaryFiltered.Count()}, Total Amount: {defaultSummaryFiltered.Sum(s => s.amount)}");
+        Console.WriteLine($"Fallback Summary Count: {fallbackSummaryFiltered.Count()}, Total Amount: {fallbackSummaryFiltered.Sum(s => s.amount)}");
+
         // Simulate fetching payment summary logic
         Console.WriteLine($"Fetching payment summary from {from} to {to}");
         return new PaymentSummary

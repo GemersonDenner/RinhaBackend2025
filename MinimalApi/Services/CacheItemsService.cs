@@ -44,6 +44,7 @@ public class CacheItemsService : ICacheItemsService
         var summary = await this.memcachedClient.GetValueAsync<SummaryInfo>(summaryItemsKey) ?? new SummaryInfo();
         summary.TotalAmount += totalAmount;
         summary.TotalRequests++;
+        Console.WriteLine($"Adding/Updating summary for {processedBy} with total amount: {summary.TotalAmount}, total requests: {summary.TotalRequests}");
         await this.memcachedClient.ReplaceAsync(summaryItemsKey, summary, cacheTimeSeconds);
     }
     
