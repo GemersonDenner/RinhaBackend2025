@@ -31,7 +31,7 @@ public class PaymentWorkerService: BackgroundService
                 var parallelOptions = new ParallelOptions
                 {
                     CancellationToken = stoppingToken,
-                    MaxDegreeOfParallelism = 15,
+                    MaxDegreeOfParallelism = 10,
                 };
                 await Parallel.ForEachAsync(new[] { nextItem }, parallelOptions, async (item, token) =>
                 {
