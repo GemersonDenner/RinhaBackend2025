@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using MinimalApi.Models;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -20,7 +21,9 @@ builder.Services.AddSingleton<MinimalApi.Services.ICacheItemsService, MinimalApi
 builder.Services.AddSingleton<MinimalApi.Services.IApiRequestsService, MinimalApi.Services.ApiRequestsService>();
 builder.Services.AddEnyimMemcached(options =>
 {
-    options.AddServer("localhost", 11211);
+    var memCPort = int.Parse(Environment.GetEnvironmentVariable("MEMCACHED_PORT"));
+    var memCHost = Environment.GetEnvironmentVariable("MEMCACHED_HOST");
+    options.AddServer(memCHost, memCPort);
 });
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

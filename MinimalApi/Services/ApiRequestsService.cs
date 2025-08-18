@@ -14,10 +14,12 @@ public class ApiRequestsService : IApiRequestsService
     {
         try
         {
-            var response = await _httpClient.PostAsJsonAsync(_configuration["DEFAULT_BASE_URL"], request, AppJsonSerializerContext.Default.PaymentProcessed);
+            var response = await _httpClient.PostAsJsonAsync(_configuration["DEFAULT_BASE_URL"]+"/payments/", request, AppJsonSerializerContext.Default.PaymentProcessed);
+            //Console.WriteLine("Response from default API: " + response);
+
             return response.IsSuccessStatusCode;
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Error calling default API: {ex.Message}");
             return false;
@@ -28,10 +30,11 @@ public class ApiRequestsService : IApiRequestsService
     {
         try
         {
-            var response = await _httpClient.PostAsJsonAsync(_configuration["FALLBACK_BASE_URL"], request, AppJsonSerializerContext.Default.PaymentProcessed);
+            var response = await _httpClient.PostAsJsonAsync(_configuration["FALLBACK_BASE_URL"]+"/payments/", request, AppJsonSerializerContext.Default.PaymentProcessed);
+            //Console.WriteLine("Response from default API: " + response);
             return response.IsSuccessStatusCode;
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Error calling fallback API: {ex.Message}");
             return false;

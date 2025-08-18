@@ -21,14 +21,19 @@ public class PaymentProcessService : IPaymentProcessService
             correlationId = paymentRequest.correlationId,
             processedAt = processDate
         });
+        Console.WriteLine($"Default API call success: {successCallApi}");
+
+        // If the default API call fails, call the fallback API
         if (!successCallApi)
         {
-            await apiRequestsService.CallFallbackApi(new PaymentProcessed
+            var successCallApiFallback = await apiRequestsService.CallFallbackApi(new PaymentProcessed
             {
                 amount = paymentRequest.amount,
                 correlationId = paymentRequest.correlationId,
                 processedAt = processDate
             });
+
+            Console.WriteLine($"Fallback API call success: {successCallApiFallback}");
         }
 
         Console.WriteLine($"Processing payment for correlationId: {paymentRequest.correlationId}, amount: {paymentRequest.amount}");
